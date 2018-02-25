@@ -14,7 +14,7 @@ armLength = 5
 
 
 #Epsilon value
-epsilon = 0.005
+epsilon = 0.0001
 
 #variances of each arm, used to generate random output
 variances = [0.1**2, 0.01**2, 0.05**2, 0.08**2, 0.02**2]
@@ -37,15 +37,11 @@ uTimesChosen = [0,0,0,0,0]
 sumOfAverages = 0
 
 #initializing the total expected regret
-regret = 0
+expectedRegret = 0
 
 #initializing the regret list to plot
-regretList = []
+expectedRegretList = []
 
-#initilizing the list to track the means of each arm
-uHatList = []
-
-regretTotal = 0
 
 #Iterate through turns
 for t in range(1000):
@@ -106,24 +102,10 @@ for t in range(1000):
 	uHat[chosenArmI] = (uHat[chosenArmI]*(uTimesChosen[chosenArmI]-1) + chosenArmValue)/(uTimesChosen[chosenArmI])
 	print("Updated average value for arm " + str(chosenArmI) + " to be " + str(uHat[chosenArmI]))
 
-	uHatList.append(uHat[chosenArmI])
-	# # update the uHatList of averages to match either the current average for
-	# # a non-selected arm, or the new average of the selected arm
-	# for i in range(armLength):
-	# 	if chosenArmI == i:
-	# 		uHatList[i].append(uHat[chosenArmI])
+	expectedRegret = (t)*epsilon*(maxArmValue - (sum(uHat)/armLength))
+	expectedRegretList.append(expectedRegret)
 
-
-	# regret of current round is equal to the number of rounds 
-	# multiplied by the maximum average value of all arms, minus the 
-	# sum of all averages for the currently chosen arm
-	print(len(uHatList))
-	print(t*maxArmValue)
-	print(sum(uHatList))
-	regret = (t)*maxArmValue - sum(uHatList)
-	regretList.append(regret)
-
-plt.plot(regretList)
+plt.plot(expectedRegretList)
 plt.ylabel('regret')
 plt.xlabel('turn')
 plt.show()
