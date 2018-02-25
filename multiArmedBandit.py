@@ -18,6 +18,7 @@ p = [0,0,0,0,0]
 
 #all turns
 for t in range(100):
+	#Toss a coin
 	#random value to choose which arm to select:
 	randomValue = random.uniform(0,1)
 
@@ -29,12 +30,17 @@ for t in range(100):
 		else:
 			continue
 
+	#Use epsilon to choose either a random arm or the currently best arm
 	if(randomValue > epsilon):
-		#select the arm with the highest empirical mean
+		#Choose the currently best arm
+		chosenArm = uHat[maxArmI]
 	else:
+		#choose a random arm
 		randomArmChoice = random.randint(0,armLength-1)
+		chosenArm = uHat[randomArmChoice]
 
-
+	#do something with the chosen arm
+	chosenArm
 
 	#update the expected value every turn
 	for i in uHat:
