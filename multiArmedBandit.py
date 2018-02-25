@@ -1,4 +1,6 @@
 import random
+import math
+from random import gauss
 
 armLength = 5
 
@@ -6,12 +8,21 @@ armLength = 5
 #Epsilon value
 epsilon = 0.1
 
-#Values of u to be randomized
-u = [0,0,0,0,0]
+#variances of each arm
+variances = [0.1**2, 0.01**2, 0.05**2, 0.08**2, 0.02**2]
 
-#Average values of u
+
+#expected values of each arm in pdf
+expectedValues = [67, 65, 70, 52, 43]
+
+
+#Initializing values of each arm to be randomized
+armRandomValue = [0,0,0,0,0]
+
+#Average values of each arm
 uHat = [0,0,0,0,0]
 
+#tracking how many times each arm has been chosen
 uTimesChosen = [0,0,0,0,0]
 
 
@@ -30,8 +41,10 @@ for t in range(1000):
 	#update the expected values of each arm, randomly
 	print("Randomizing arms:")
 	for i in range(armLength):
-		u[i] = random.uniform(0,100)
-		print("Arm " + str(i) + " random value: " + str(u[i]))
+		#randomizing using variances and expected means
+		#https://stackoverflow.com/questions/8815706/random-number-with-specific-variance-in-python
+		armRandomValue[i] = gauss(expectedValues[i], math.sqrt(variances[i]))
+		print("Arm " + str(i) + " random value: " + str(armRandomValue[i]))
 
 	#Toss a coin
 	#random value to choose which arm to select:
@@ -54,7 +67,7 @@ for t in range(1000):
 	if(randomValue > epsilon) and t != 0:
 		print("Chosen current best arm")
 		#Choose the currently best arm
-		chosenArmValue = u[maxArmI]
+		chosenArmValue = armRandomValue[maxArmI]
 		chosenArmI = maxArmI
 		uTimesChosen[chosenArmI] += 1
 
@@ -62,7 +75,7 @@ for t in range(1000):
 		print("Chosen random arm")
 		#choose a random arm
 		randomArmChoice = random.randint(0,armLength-1)
-		chosenArmValue = u[randomArmChoice]
+		chosenArmValue = armRandomValue[randomArmChoice]
 		chosenArmI = randomArmChoice
 		uTimesChosen[chosenArmI] += 1
 
