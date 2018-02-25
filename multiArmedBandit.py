@@ -1,8 +1,9 @@
 import random
 dist = [0,0,0,0,0]
 
-
-maxExp = 0
+armLength = 5
+maxArmValue = 0
+maxArmI = 0
 
 #Epsilon value
 epsilon = 0.01
@@ -10,30 +11,28 @@ epsilon = 0.01
 #5 expected values for 5 arms
 uHat = [0,0,0,0,0]
 
-#5 Variances for 5 arms
-var = [0.1^2,0.01^2,0.05^2,0.03^2,0.08^2]
-
-#Initializing probabilities
-p = [0,0,0,0,0,0,0,0,0,0]
+#Initializing 5 probabilities for 5 arms
+#The probability of picking each arm is each item
+p = [0,0,0,0,0]
 
 
 #all turns
 for t in range(100):
 	#random value to choose which arm to select:
-	randomValue = uniform.random(0,1)
+	randomValue = random.uniform(0,1)
 
-	#find the maximum expected value
+	#find the maximum empirical mean
 	for i in uHat:
-		if i > maxExp:
-			maxExp = uHat[i]
+		if uHat[i] > maxArmValue:
+			maxArmValue = maxArmValue[i]
+			maxArmI = i
 		else:
 			continue
 
-
 	if(randomValue > epsilon):
-		#select the arm with the highest empirical probability
+		#select the arm with the highest empirical mean
 	else:
-		#select a random arm
+		randomArmChoice = random.randint(0,armLength-1)
 
 
 
