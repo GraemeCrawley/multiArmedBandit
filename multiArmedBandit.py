@@ -1,5 +1,4 @@
 import random
-dist = [0,0,0,0,0]
 
 armLength = 5
 maxArmValue = 0
@@ -10,10 +9,6 @@ epsilon = 0.01
 
 #5 expected values for 5 arms
 uHat = [0,0,0,0,0]
-
-#Initializing 5 probabilities for 5 arms
-#The probability of picking each arm is each item
-p = [0,0,0,0,0]
 
 
 #all turns
@@ -41,10 +36,5 @@ for t in range(100):
 
 	#do something with the chosen arm
 	chosenArm
-
-	#update the expected value every turn
-	for i in uHat:
-		#some way to update uHat
-
 
 
