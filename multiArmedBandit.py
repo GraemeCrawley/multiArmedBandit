@@ -1,8 +1,7 @@
 import random
 
 armLength = 5
-maxArmValue = 0
-maxArmI = 0
+
 
 #Epsilon value
 epsilon = 0.01
@@ -13,6 +12,12 @@ uHat = [0,0,0,0,0]
 
 #all turns
 for t in range(100):
+	maxArmValue = 0
+	maxArmI = 0
+	#update the expected values of each arm, randomly
+	for i in uHat:
+		uHat[i] = random.uniform(0,100)
+
 	#Toss a coin
 	#random value to choose which arm to select:
 	randomValue = random.uniform(0,1)
