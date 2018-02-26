@@ -9,19 +9,57 @@ import random
 import math
 from random import gauss
 import matplotlib.pyplot as plt
+import sys, os
 
+
+#Used to disable and enable printing for specific code blocks
+#https://stackoverflow.com/questions/8391411/suppress-calls-to-print-python
+# Disable
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+
+# Restore
+def enablePrint():
+    sys.stdout = sys.__stdout__
+
+
+#turn the printing and plotting on/off
+printing = False
+plotting = False
+
+if(printing == False):
+	blockPrint()
+
+#number of options
 armLength = 5
 
-
 #Epsilon value
-epsilon = 0.0001
+epsilon = 0.01
 
-#variances of each arm, used to generate random output
-variances = [0.1**2, 0.01**2, 0.05**2, 0.08**2, 0.02**2]
+#bound on error
+boundOnError = 0.001
 
 
-#expected values of each arm in pdf, used to generate random output
-expectedValues = [67, 65, 70, 52, 43]
+
+# variances of each arm, randomized between 0 and 0.1
+# used to generate random output
+variances = []
+for i in range(armLength):
+	variances.append(random.uniform(0.00, 0.10)**2)
+
+
+
+# expected values of each arm in pdf, randomized between 0 and 100
+# used to generate random output
+expectedValues = []
+for i in range(armLength):
+	expectedValues.append(random.uniform(0, 100))
+
+# used to track when the average value of an arm falls 
+# within a confidence imterval
+withinIntervalTimestep = []
+for i in range(armLength):
+	withinIntervalTimestep.append(0)
 
 
 #Initializing values of each arm to be randomized
@@ -32,9 +70,6 @@ uHat = [0,0,0,0,0]
 
 #tracking how many times each arm has been chosen
 uTimesChosen = [0,0,0,0,0]
-
-#initializing the sum of the arm averages
-sumOfAverages = 0
 
 #initializing the total expected regret
 expectedRegret = 0
@@ -102,10 +137,27 @@ for t in range(1000):
 	uHat[chosenArmI] = (uHat[chosenArmI]*(uTimesChosen[chosenArmI]-1) + chosenArmValue)/(uTimesChosen[chosenArmI])
 	print("Updated average value for arm " + str(chosenArmI) + " to be " + str(uHat[chosenArmI]))
 
+	#expected regret
 	expectedRegret = (t)*epsilon*(maxArmValue - (sum(uHat)/armLength))
 	expectedRegretList.append(expectedRegret)
+
+	#calculate time it takes to get within a vertain interval of the expected value
+	if(abs(uHat[chosenArmI] - expectedValues[chosenArmI]) > boundOnError and withinIntervalTimestep[chosenArmI] == 0):
+		withinIntervalTimestep[chosenArmI] = t
+
+
 
 plt.plot(expectedRegretList)
 plt.ylabel('regret')
 plt.xlabel('turn')
-plt.show()
+if(plotting):
+	plt.show()
+
+for i in range(armLength):
+	print("\nArm " + str(i) + ":")
+	print("Original Value: " + str(expectedValues[i]))
+	print("Original Variance: " + str(variances[i]))
+	print("Final average: " + str(uHat[i]))
+	print("Steps to get within CI: " + str(withinIntervalTimestep[i]))
+
+
